@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>المستخدمون - Bluewave</title>
+    <title>Bluewave - الدردشات</title>
 
     <style>
         * {
@@ -13,15 +13,15 @@
 
         body {
             margin: 0;
-            padding: 25px;
             min-height: 100vh;
-            font-family: Arial, sans-serif;
             background: #050505;
             color: white;
+            font-family: Arial, sans-serif;
+            padding: 25px;
         }
 
         .container {
-            max-width: 800px;
+            width: min(850px, 100%);
             margin: auto;
         }
 
@@ -29,9 +29,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 12px;
             flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         h1 {
@@ -39,21 +39,22 @@
             margin: 0;
         }
 
-        h2 {
-            margin-bottom: 20px;
-        }
-
         .welcome {
             color: #b8cce0;
-            margin-top: 10px;
+            margin: 8px 0 0;
         }
 
         a {
-            color: #42baff;
             text-decoration: none;
         }
 
-        .logout {
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
             color: #42baff;
         }
 
@@ -63,175 +64,258 @@
             margin-bottom: 25px;
         }
 
-        .search-input {
+        .search-box input {
             flex: 1;
+            min-width: 0;
             padding: 13px;
+            border-radius: 10px;
             border: 1px solid #1b3553;
-            border-radius: 8px;
             background: #111827;
             color: white;
-            font-size: 16px;
             outline: none;
+            font-size: 15px;
         }
 
-        .search-input:focus {
+        .search-box input:focus {
             border-color: #168cff;
         }
 
-        .search-button {
-            border: none;
+        .search-box button {
+            border: 0;
+            border-radius: 10px;
+            padding: 0 22px;
             background: #168cff;
             color: white;
-            padding: 13px 20px;
-            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
-        }
-
-        .search-button:hover {
-            background: #0874d1;
-        }
-
-        .person {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            background: #111827;
-            border: 1px solid #1b3553;
-            padding: 18px;
-            margin: 12px 0;
-            border-radius: 12px;
-            transition: 0.2s;
-        }
-
-        .person:hover {
-            border-color: #168cff;
-            background: #14243a;
-        }
-
-        .username {
-            color: white;
-            font-size: 17px;
             font-weight: bold;
         }
 
-        .chat-link {
-            display: inline-block;
-            background: #168cff;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 8px;
-            white-space: nowrap;
+        .section-title {
+            color: #9fc9eb;
+            margin: 25px 0 12px;
+            font-size: 18px;
         }
 
-        .chat-link:hover {
-            background: #0874d1;
+        .chat-list,
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-item,
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            color: white;
+            background: #0c1724;
+            border: 1px solid #193654;
+            border-radius: 14px;
+            padding: 13px;
+            transition: 0.2s;
+        }
+
+        .chat-item:hover,
+        .result-item:hover {
+            background: #102b49;
+            border-color: #168cff;
+        }
+
+        .avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #163452;
+            flex-shrink: 0;
+        }
+
+        .avatar-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9fc9eb;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .chat-info {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .username {
+            font-weight: bold;
+            margin-bottom: 5px;
+            overflow-wrap: anywhere;
+        }
+
+        .last-message {
+            color: #91a8bd;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .count-wrap {
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .count {
+            min-width: 34px;
+            height: 34px;
+            padding: 0 8px;
+            border-radius: 17px;
+            background: #168cff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .count-label {
+            color: #7895ad;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .result-item .avatar {
+            width: 42px;
+            height: 42px;
         }
 
         .empty {
-            color: #b8cce0;
-            background: #111827;
-            padding: 20px;
-            border-radius: 12px;
             text-align: center;
+            color: #91a8bd;
+            padding: 25px;
+            background: #0a1017;
+            border-radius: 14px;
+            border: 1px solid #17283a;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 500px) {
             body {
-                padding: 15px;
+                padding: 14px;
             }
 
-            .person {
-                padding: 13px;
+            .search-box button {
+                padding: 0 15px;
             }
 
-            .search-box {
-                flex-direction: column;
+            .chat-item,
+            .result-item {
+                padding: 10px;
             }
 
-            .search-button {
-                width: 100%;
+            .avatar {
+                width: 44px;
+                height: 44px;
             }
         }
     </style>
 </head>
 
 <body>
-
 <div class="container">
 
     <header>
         <div>
             <h1>💙 Bluewave</h1>
-
-            <p class="welcome">
-                أهلاً {{ username }}، نورت Bluewave!
-            </p>
+            <p class="welcome">أهلاً {{ username }}، نورت Bluewave!</p>
         </div>
 
-        <div>
-            <a href="/profile" class="logout">
-                👤 بروفايلي
-            </a>
-
-            <span> | </span>
-
-            <a href="/logout" class="logout">
-                تسجيل الخروج
-            </a>
-        </div>
+        <nav class="nav-links">
+            <a href="/profile">👤 بروفايلي</a>
+            <a href="/logout">تسجيل الخروج</a>
+        </nav>
     </header>
 
-    <main>
+    <form class="search-box" method="GET" action="/users">
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            placeholder="ابحث عن مستخدم..."
+            autocomplete="off"
+        >
+        <button type="submit">بحث</button>
+    </form>
 
-        <h2>ابحث عن مستخدم 🔎</h2>
+    <h2 class="section-title">💬 دردشاتك</h2>
 
-        <form method="GET" action="/users" class="search-box">
+    {% if conversations %}
+        <div class="chat-list">
+            {% for chat in conversations %}
+                <a class="chat-item" href="{{ url_for('chat', other_user_id=chat['id']) }}">
 
-            <input
-                type="text"
-                name="search"
-                class="search-input"
-                placeholder="اكتب اسم المستخدم..."
-                value="{{ search }}"
-                autocomplete="off"
-            >
+                    {% if chat['profile_image'] %}
+                        <img
+                            class="avatar"
+                            src="{{ url_for('static', filename='uploads/' + chat['profile_image']) }}"
+                            alt=""
+                        >
+                    {% else %}
+                        <div class="avatar avatar-placeholder">
+                            {{ chat['username'][0]|upper }}
+                        </div>
+                    {% endif %}
 
-            <button type="submit" class="search-button">
-                بحث
-            </button>
+                    <div class="chat-info">
+                        <div class="username">{{ chat['username'] }}</div>
+                        <div class="last-message">
+                            {{ chat['last_message'] or 'لا توجد رسالة بعد' }}
+                        </div>
+                    </div>
 
-        </form>
+                    <div class="count-wrap">
+                        <div class="count">{{ chat['message_count'] }}</div>
+                        <div class="count-label">رسالة</div>
+                    </div>
 
-        {% for person in people %}
-
-            <div class="person">
-
-                <span class="username">
-                    {{ person["username"] }}
-                </span>
-
-                <a
-                    class="chat-link"
-                    href="{{ url_for('chat', other_user_id=person['id']) }}"
-                >
-                    مراسلة
                 </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty">
+            لسه مفيش دردشات. ابحث عن مستخدم وابدأ أول محادثة 💙
+        </div>
+    {% endif %}
 
+    {% if search %}
+        <h2 class="section-title">🔎 نتائج البحث عن: {{ search }}</h2>
+
+        {% if people %}
+            <div class="results">
+                {% for person in people %}
+                    <a
+                        class="result-item"
+                        href="{{ url_for('chat', other_user_id=person['id']) }}"
+                    >
+                        {% if person['profile_image'] %}
+                            <img
+                                class="avatar"
+                                src="{{ url_for('static', filename='uploads/' + person['profile_image']) }}"
+                                alt=""
+                            >
+                        {% else %}
+                            <div class="avatar avatar-placeholder">
+                                {{ person['username'][0]|upper }}
+                            </div>
+                        {% endif %}
+
+                        <strong>{{ person['username'] }}</strong>
+                    </a>
+                {% endfor %}
             </div>
-
         {% else %}
-
-            <p class="empty">
-                مفيش مستخدم بالاسم ده.
-            </p>
-
-        {% endfor %}
-
-    </main>
+            <div class="empty">مفيش مستخدم بالاسم ده.</div>
+        {% endif %}
+    {% endif %}
 
 </div>
-
 </body>
 </html>
