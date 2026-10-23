@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bluewave - تسجيل الدخول</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #050505;
+            color: white;
+            font-family: Arial, sans-serif;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .card {
+            background: #0c1724;
+            border: 1px solid #193654;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(22, 140, 255, 0.08);
+        }
+
+        .logo {
+            text-align: center;
+            color: #42baff;
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7895ad;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b9d9ef;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 17px;
+
+            border-radius: 10px;
+            border: 1px solid #1b3553;
+
+            background: #111827;
+            color: white;
+
+            outline: none;
+            font-size: 15px;
+        }
+
+        input:focus {
+            border-color: #168cff;
+            box-shadow: 0 0 8px rgba(22, 140, 255, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+
+            border: 0;
+            border-radius: 10px;
+
+            background: #168cff;
+            color: white;
+
+            font-size: 15px;
+            font-weight: bold;
+
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #0877df;
+            transform: translateY(-1px);
+        }
+
+        .error {
+            background: #35151b;
+            border: 1px solid #70232e;
+            color: #ff9da8;
+
+            padding: 11px;
+            border-radius: 10px;
+
+            text-align: center;
+            font-size: 13px;
+
+            margin-bottom: 17px;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #7895ad;
+            font-size: 13px;
+        }
+
+        .register-link a {
+            color: #42baff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .created-by {
+            text-align: center;
+            margin-top: 22px;
+
+            color: #42baff;
+            font-size: 15px;
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            text-shadow:
+                0 0 6px rgba(66, 186, 255, 0.5),
+                0 0 12px rgba(66, 186, 255, 0.3);
+
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="logo">
+            💙 Bluewave
+        </div>
+
+        <div class="subtitle">
+            أهلاً بيك تاني 👋
+        </div>
+
+        {% if error %}
+            <div class="error">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="/login">
+
+            <label>
+                اسم المستخدم
+            </label>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="اكتب اسم المستخدم"
+                required
+                autocomplete="username"
+            >
+
+            <label>
+                كلمة المرور
+            </label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="اكتب كلمة المرور"
+                required
+                autocomplete="current-password"
+            >
+
+            <button type="submit">
+                تسجيل الدخول
+            </button>
+
+        </form>
+
+        <div class="register-link">
+            معندكش حساب؟
+            <a href="/register">
+                إنشاء حساب
+            </a>
+        </div>
+
+        <div class="created-by">
+            ✦ 𝓒𝓻𝓮𝓪𝓽𝓮𝓭 𝓫𝔂 𝓞𝓶𝓪𝓻 ✦
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
