@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحادثة - Bluewave</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #050505;
+            color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #42baff;
+            margin: 0;
+        }
+
+        .settings-wrapper {
+            position: relative;
+        }
+
+        .dots-button {
+            width: 45px;
+            height: 45px;
+            border: 1px solid #1e4d73;
+            border-radius: 12px;
+            background: #102b49;
+            color: white;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        .dots-button:hover {
+            background: #168cff;
+        }
+
+        .settings-menu {
+            display: none;
+            position: absolute;
+            left: 0;
+            top: 52px;
+            width: 300px;
+            padding: 18px;
+            background: rgba(8, 20, 34, 0.98);
+            border: 1px solid #1e4d73;
+            border-radius: 15px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+            z-index: 100;
+        }
+
+        .settings-menu.show {
+            display: block;
+        }
+
+        .settings-title {
+            color: #42baff;
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .setting-section {
+            padding: 12px 0;
+            border-bottom: 1px solid #1b3553;
+        }
+
+        .setting-section:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            display: block;
+            color: #b8cce0;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .file-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background: #168cff;
+            color: white;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #chat_background {
+            display: none;
+        }
+
+        .file-name {
+            display: block;
+            color: #9fb5ca;
+            font-size: 12px;
+            margin-top: 8px;
+            word-break: break-word;
+        }
+
+        .preview {
+            display: none;
+            width: 100%;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 9px;
+            margin-top: 10px;
+            border: 1px solid #42baff;
+        }
+
+        .background-button {
+            width: 100%;
+            margin-top: 10px;
+            background: #102b49;
+            color: #42baff;
+            border: 1px solid #168cff;
+            padding: 9px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .background-button:hover {
+            background: #168cff;
+            color: white;
+        }
+
+        .color-options {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 3px solid #263d55;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.15);
+            border-color: white;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .profile-picture {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: #168cff;
+            border: 2px solid #42baff;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .default-picture {
+            font-size: 25px;
+        }
+
+        .chat-title {
+            color: #b8cce0;
+            margin: 0;
+        }
+
+        .error {
+            background: #3b1111;
+            border: 1px solid #8f2d2d;
+            color: #ffb3b3;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .chat-box {
+            background: #102b49;
+            border: 1px solid #1b3553;
+            border-radius: 12px;
+            padding: 15px;
+            min-height: 350px;
+            max-height: 500px;
+            overflow-y: auto;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .message {
+            background: rgba(23, 59, 96, 0.94);
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin: 10px 0;
+            max-width: 75%;
+            overflow-wrap: anywhere;
+        }
+
+        .my-message {
+            margin-right: auto;
+            background: {{ message_color }};
+        }
+
+        .other-message {
+            margin-left: auto;
+        }
+
+        .message-user {
+            font-size: 13px;
+            color: #b8cce0;
+            margin-bottom: 5px;
+        }
+
+        .my-message .message-user {
+            color: white;
+        }
+
+        .message-text {
+            font-size: 16px;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #b8cce0;
+            margin-top: 6px;
+        }
+
+        .my-message .message-time {
+            color: #d9efff;
+        }
+
+        /* تفاعلات الإيموجي */
+
+        .reaction-area {
+            margin-top: 9px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .reaction-form {
+            display: inline-flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .reaction-button {
+            border: 1px solid #315477;
+            background: rgba(3, 15, 30, 0.75);
+            color: white;
+            border-radius: 20px;
+            padding: 4px 7px;
+            cursor: pointer;
+            font-size: 17px;
+            line-height: 1.3;
+            transition: 0.15s;
+        }
+
+        .reaction-button:hover {
+            transform: scale(1.12);
+            border-color: #42baff;
+            background: #102b49;
+        }
+
+        .reaction-button.selected {
+            border-color: #42baff;
+            background: #174d79;
+            box-shadow: 0 0 0 1px #42baff;
+        }
+
+        .reaction-count {
+            font-size: 12px;
+            margin-right: 3px;
+        }
+
+        .empty {
+            text-align: center;
+            color: #b8cce0;
+            margin-top: 140px;
+        }
+
+        .message-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .message-input {
+            flex: 1;
+            min-width: 0;
+            padding: 12px;
+            border: 1px solid #1b3553;
+            border-radius: 8px;
+            background: #111827;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .message-input:focus {
+            border-color: #168cff;
+        }
+
+        .send-button {
+            border: none;
+            background: #168cff;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .send-button:hover {
+            background: #0874d1;
+        }
+
+        .back {
+            margin-top: 20px;
+        }
+
+        .back a {
+            color: #42baff;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .message-form {
+                flex-direction: column;
+            }
+
+            .send-button {
+                width: 100%;
+            }
+
+            .settings-menu {
+                width: 280px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <div class="top-bar">
+        <h1>💙 Bluewave</h1>
+
+        <div class="settings-wrapper">
+            <button
+                class="dots-button"
+                onclick="toggleSettings()"
+                type="button"
+            >⋮</button>
+
+            <div id="settingsMenu" class="settings-menu">
+                <div class="settings-title">
+                    ⚙️ إعدادات المحادثة
+                </div>
+
+                <div class="setting-section">
+                    <span class="setting-label">
+                        🖼️ تغيير خلفية المحادثة
+                    </span>
+
+                    <form method="POST" enctype="multipart/form-data">
+                        <label
+                            for="chat_background"
+                            class="file-label"
+                        >
+                            📷 اختار صورة
+                        </label>
+
+                        <input
+                            type="file"
+                            name="chat_background"
+                            id="chat_background"
+                            accept="image/png,image/jpeg,image/gif,image/webp,image/jfif"
+                        >
+
+                        <img
+                            id="preview"
+                            class="preview"
+                            alt="معاينة الخلفية"
+                        >
+
+                        <span id="file-name" class="file-name">
+                            مفيش صورة مختارة
+                        </span>
+
+                        <button
+                            type="submit"
+                            class="background-button"
+                        >
+                            ✨ تطبيق الخلفية
+                        </button>
+                    </form>
+                </div>
+
+                <div class="setting-section">
+                    <span class="setting-label">
+                        🎨 لون رسائلك
+                    </span>
+
+                    <form method="POST">
+                        <input
+                            type="hidden"
+                            name="action"
+                            value="change_color"
+                        >
+
+                        <div class="color-options">
+                            <button type="submit" name="message_color"
+                                value="#168cff" class="color-option"
+                                style="background:#168cff;" title="أزرق"></button>
+
+                            <button type="submit" name="message_color"
+                                value="#22c55e" class="color-option"
+                                style="background:#22c55e;" title="أخضر"></button>
+
+                            <button type="submit" name="message_color"
+                                value="#a855f7" class="color-option"
+                                style="background:#a855f7;" title="بنفسجي"></button>
+
+                            <button type="submit" name="message_color"
+                                value="#ef4444" class="color-option"
+                                style="background:#ef4444;" title="أحمر"></button>
+
+                            <button type="submit" name="message_color"
+                                value="#f97316" class="color-option"
+                                style="background:#f97316;" title="برتقالي"></button>
+
+                            <button type="submit" name="message_color"
+                                value="#eab308" class="color-option"
+                                style="background:#eab308;" title="أصفر"></button>
+
+                            <button type="submit" name="message_color"
+                                value="#ec4899" class="color-option"
+                                style="background:#ec4899;" title="وردي"></button>
+
+                            <button type="submit" name="message_color"
+                                value="#14b8a6" class="color-option"
+                                style="background:#14b8a6;" title="تركواز"></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-header">
+        <div class="profile-picture">
+            {% if other_profile_image %}
+                <img
+                    src="{{ url_for('static', filename='uploads/' + other_profile_image) }}"
+                    alt="Profile picture"
+                >
+            {% else %}
+                <span class="default-picture">👤</span>
+            {% endif %}
+        </div>
+
+        <h2 class="chat-title">
+            المحادثة مع {{ other_username }}
+        </h2>
+    </div>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <div
+        class="chat-box"
+        id="chatBox"
+        {% if chat_background %}
+            style="background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('{{ url_for('static', filename='uploads/' + chat_background) }}');"
+        {% endif %}
+    >
+
+        {% if messages %}
+            {% for message in messages %}
+
+                <div class="message {% if message['user_id'] == session['user_id'] %}my-message{% else %}other-message{% endif %}">
+
+                    <div class="message-user">
+                        {{ message["username"] }}
+                    </div>
+
+                    <div class="message-text">{{ message["message"] }}</div>
+
+                    <div class="message-time">
+                        {{ message["created_at"] }}
+                    </div>
+
+                    <!-- أزرار التفاعل مع الرسالة -->
+                    <div class="reaction-area">
+
+                        <form method="POST" class="reaction-form">
+                            <input type="hidden" name="action" value="react">
+                            <input type="hidden" name="message_id" value="{{ message['id'] }}">
+
+                            {% for emoji in ["👍", "❤️", "😂", "😮", "😢", "🔥"] %}
+                                <button
+                                    type="submit"
+                                    name="emoji"
+                                    value="{{ emoji }}"
+                                    class="reaction-button {% if user_reactions.get(message['id']) == emoji %}selected{% endif %}"
+                                    title="تفاعل بـ {{ emoji }}"
+                                >
+                                    {{ emoji }}
+                                    {% set count = reaction_counts.get(message['id'], {}).get(emoji, 0) %}
+                                    {% if count > 0 %}
+                                        <span class="reaction-count">{{ count }}</span>
+                                    {% endif %}
+                                </button>
+                            {% endfor %}
+                        </form>
+
+                    </div>
+                </div>
+
+            {% endfor %}
+        {% else %}
+            <p class="empty">
+                مفيش رسائل لسه... ابدأ المحادثة 💙
+            </p>
+        {% endif %}
+
+    </div>
+
+    <form method="POST" class="message-form">
+        <input
+            type="text"
+            name="message"
+            class="message-input"
+            placeholder="اكتب رسالتك..."
+            maxlength="2000"
+            autocomplete="off"
+        >
+
+        <button type="submit" class="send-button">
+            إرسال
+        </button>
+    </form>
+
+    <p class="back">
+        <a href="/users">← الرجوع للمستخدمين</a>
+    </p>
+
+</div>
+
+<script>
+    function toggleSettings() {
+        document.getElementById("settingsMenu").classList.toggle("show");
+    }
+
+    const backgroundInput = document.getElementById("chat_background");
+    const preview = document.getElementById("preview");
+    const fileName = document.getElementById("file-name");
+
+    backgroundInput.addEventListener("change", function () {
+        const file = this.files[0];
+
+        if (!file) {
+            preview.style.display = "none";
+            fileName.textContent = "مفيش صورة مختارة";
+            return;
+        }
+
+        fileName.textContent = file.name;
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = "block";
+    });
+
+    document.addEventListener("click", function(event) {
+        const wrapper = document.querySelector(".settings-wrapper");
+
+        if (!wrapper.contains(event.target)) {
+            document.getElementById("settingsMenu").classList.remove("show");
+        }
+    });
+
+    // الانتقال لآخر الرسائل عند فتح المحادثة
+    const chatBox = document.getElementById("chatBox");
+    chatBox.scrollTop = chatBox.scrollHeight;
+</script>
+
+</body>
+</html>
