@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>المستخدمون - Bluewave</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 25px;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #050505;
+            color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #42baff;
+            margin: 0;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .welcome {
+            color: #b8cce0;
+            margin-top: 10px;
+        }
+
+        a {
+            color: #42baff;
+            text-decoration: none;
+        }
+
+        .logout {
+            color: #42baff;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 13px;
+            border: 1px solid #1b3553;
+            border-radius: 8px;
+            background: #111827;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #168cff;
+        }
+
+        .search-button {
+            border: none;
+            background: #168cff;
+            color: white;
+            padding: 13px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .search-button:hover {
+            background: #0874d1;
+        }
+
+        .person {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            background: #111827;
+            border: 1px solid #1b3553;
+            padding: 18px;
+            margin: 12px 0;
+            border-radius: 12px;
+            transition: 0.2s;
+        }
+
+        .person:hover {
+            border-color: #168cff;
+            background: #14243a;
+        }
+
+        .username {
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .chat-link {
+            display: inline-block;
+            background: #168cff;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .chat-link:hover {
+            background: #0874d1;
+        }
+
+        .empty {
+            color: #b8cce0;
+            background: #111827;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+
+            .person {
+                padding: 13px;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <div>
+            <h1>💙 Bluewave</h1>
+
+            <p class="welcome">
+                أهلاً {{ username }}، نورت Bluewave!
+            </p>
+        </div>
+
+        <div>
+            <a href="/profile" class="logout">
+                👤 بروفايلي
+            </a>
+
+            <span> | </span>
+
+            <a href="/logout" class="logout">
+                تسجيل الخروج
+            </a>
+        </div>
+    </header>
+
+    <main>
+
+        <h2>ابحث عن مستخدم 🔎</h2>
+
+        <form method="GET" action="/users" class="search-box">
+
+            <input
+                type="text"
+                name="search"
+                class="search-input"
+                placeholder="اكتب اسم المستخدم..."
+                value="{{ search }}"
+                autocomplete="off"
+            >
+
+            <button type="submit" class="search-button">
+                بحث
+            </button>
+
+        </form>
+
+        {% for person in people %}
+
+            <div class="person">
+
+                <span class="username">
+                    {{ person["username"] }}
+                </span>
+
+                <a
+                    class="chat-link"
+                    href="{{ url_for('chat', other_user_id=person['id']) }}"
+                >
+                    مراسلة
+                </a>
+
+            </div>
+
+        {% else %}
+
+            <p class="empty">
+                مفيش مستخدم بالاسم ده.
+            </p>
+
+        {% endfor %}
+
+    </main>
+
+</div>
+
+</body>
+</html>
