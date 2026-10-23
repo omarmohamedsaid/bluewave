@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>البروفايل - Bluewave</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 25px;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #050505;
+            color: white;
+        }
+
+        .profile-card {
+            max-width: 500px;
+            margin: 60px auto;
+            background: #111827;
+            border: 1px solid #1b3553;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: #168cff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px solid #42baff;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .default-avatar {
+            font-size: 50px;
+        }
+
+        h1 {
+            color: #42baff;
+        }
+
+        .username {
+            font-size: 22px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .upload-form {
+            margin-top: 25px;
+        }
+
+        .file-input {
+            width: 100%;
+            padding: 12px;
+            background: #0b1220;
+            color: white;
+            border: 1px solid #1b3553;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .upload-button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #168cff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .upload-button:hover {
+            background: #0874d1;
+        }
+
+        .error {
+            color: #ff6b6b;
+            margin-top: 15px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: #1b3553;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .back:hover {
+            background: #25496f;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="profile-card">
+
+        <div class="avatar">
+
+            {% if user["profile_image"] %}
+                <img
+                    src="{{ url_for('static', filename='uploads/' + user['profile_image']) }}"
+                    alt="Profile picture"
+                >
+            {% else %}
+                <span class="default-avatar">👤</span>
+            {% endif %}
+
+        </div>
+
+        <h1>Bluewave 💙</h1>
+
+        <div class="username">
+            {{ user["username"] }}
+        </div>
+
+        <form
+            method="POST"
+            action="/profile"
+            enctype="multipart/form-data"
+            class="upload-form"
+        >
+
+            <input
+                type="file"
+                name="profile_image"
+                class="file-input"
+                accept="image/png, image/jpeg, image/gif, image/webp"
+            >
+
+            <button
+                type="submit"
+                class="upload-button"
+            >
+                📷 تغيير الصورة
+            </button>
+
+        </form>
+
+        {% if error %}
+            <p class="error">
+                {{ error }}
+            </p>
+        {% endif %}
+
+        <a href="/users" class="back">
+            ← الرجوع للمستخدمين
+        </a>
+
+    </div>
+
+</body>
+</html>
